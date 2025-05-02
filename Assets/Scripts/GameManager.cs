@@ -28,6 +28,8 @@ public class GameManager : NetworkBehaviour
 
     public PlayerType LocalPlayerType { get; private set; }
     public NetworkVariable<PlayerType> currentPlayablePlayerType = new NetworkVariable<PlayerType>();
+    private PlayerType[,] playerTypeArray;
+
     private void Awake()
     {
         if (Instance != null)
@@ -35,6 +37,8 @@ public class GameManager : NetworkBehaviour
             Debug.LogError("More than one GameManager Instance!");
         }
         Instance = this;
+
+        playerTypeArray = new PlayerType[3, 3];
     }
 
     public override void OnNetworkSpawn()
@@ -81,6 +85,10 @@ public class GameManager : NetworkBehaviour
         Debug.Log("Clicked on the grid: " + x + ", " + y);
 
         if (playerType != currentPlayablePlayerType.Value) return;
+
+        if (playerTypeArray[x, y] != PlayerType.None) return;
+
+        playerTypeArray[x, y] = playerType;
 
         OnClickedOnGridPosition.Invoke(this, new OnClickedOnGridPositionEventArgs
         {
