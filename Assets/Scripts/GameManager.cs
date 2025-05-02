@@ -99,6 +99,61 @@ public class GameManager : NetworkBehaviour
 
         // Switch Current Playable Player Type
         currentPlayablePlayerType.Value = currentPlayablePlayerType.Value == PlayerType.Cross ? PlayerType.Circle : PlayerType.Cross;
+
+        TestWinner();
+    }
+
+    private void TestWinner()
+    {
+        if (playerTypeArray[0, 0] != PlayerType.None &&
+            playerTypeArray[0, 0] == playerTypeArray[1, 0] &&
+            playerTypeArray[1, 0] == playerTypeArray[2, 0])
+        {
+            Debug.Log(playerTypeArray[0, 0].ToString() + " wins!");
+        }
+        if (playerTypeArray[0, 1] != PlayerType.None &&
+            playerTypeArray[1, 1] == playerTypeArray[0, 1] &&
+            playerTypeArray[2, 1] == playerTypeArray[1, 1])
+        {
+            Debug.Log(playerTypeArray[0, 1].ToString() + " wins!");
+        }
+        if (playerTypeArray[0, 2] != PlayerType.None &&
+            playerTypeArray[1, 2] == playerTypeArray[0, 2] &&
+            playerTypeArray[2, 2] == playerTypeArray[1, 2])
+        {
+            Debug.Log(playerTypeArray[0, 2].ToString() + " wins!");
+        }
+        if (playerTypeArray[0, 0] != PlayerType.None &&
+            playerTypeArray[0, 1] == playerTypeArray[0, 0] &&
+            playerTypeArray[0, 2] == playerTypeArray[0, 1])
+        {
+            Debug.Log(playerTypeArray[0, 0].ToString() + " wins!");
+        }
+        if (playerTypeArray[1, 0] != PlayerType.None &&
+            playerTypeArray[1, 1] == playerTypeArray[1, 0] &&
+            playerTypeArray[1, 2] == playerTypeArray[1, 1])
+        {
+            Debug.Log(playerTypeArray[1, 0].ToString() + " wins!");
+        }
+        if (playerTypeArray[2, 0] != PlayerType.None &&
+            playerTypeArray[2, 1] == playerTypeArray[2, 0] &&
+            playerTypeArray[2, 2] == playerTypeArray[2, 1])
+        {
+            Debug.Log(playerTypeArray[2, 0].ToString() + " wins!");
+        }
+        if (playerTypeArray[0, 0] != PlayerType.None &&
+            playerTypeArray[1, 1] == playerTypeArray[0, 0] &&
+            playerTypeArray[2, 2] == playerTypeArray[1, 1])
+        {
+            Debug.Log(playerTypeArray[0, 0].ToString() + " wins!");
+        }
+        if (playerTypeArray[0, 2] != PlayerType.None &&
+            playerTypeArray[1, 1] == playerTypeArray[0, 2] &&
+            playerTypeArray[2, 0] == playerTypeArray[1, 1])
+        {
+            Debug.Log(playerTypeArray[0, 2].ToString() + " wins!");
+        }
+
     }
 
     public PlayerType GetCurrentPlayablePlayerType()
