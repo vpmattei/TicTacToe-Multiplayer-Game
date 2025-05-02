@@ -53,6 +53,11 @@ public class GameManager : NetworkBehaviour
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
         }
+
+        currentPlayablePlayerType.OnValueChanged += (PlayerType oldPlayerType, PlayerType newPlayerType) =>
+        {
+            OnCurrentPlayablePlayerTypeChanged.Invoke(this, EventArgs.Empty);
+        };
     }
 
     private void NetworkManager_OnClientConnectedCallback(ulong obj)
@@ -86,14 +91,6 @@ public class GameManager : NetworkBehaviour
 
         // Switch Current Playable Player Type
         currentPlayablePlayerType.Value = currentPlayablePlayerType.Value == PlayerType.Cross ? PlayerType.Circle : PlayerType.Cross;
-
-        TriggerOnCurrentPlayablePlayerTypeChangedRpc();
-    }
-
-    [Rpc(SendTo.ClientsAndHost)]
-    private void TriggerOnCurrentPlayablePlayerTypeChangedRpc()
-    {
-        OnCurrentPlayablePlayerTypeChanged.Invoke(this, EventArgs.Empty);
     }
 
     public PlayerType GetCurrentPlayablePlayerType()
