@@ -485,6 +485,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486455246ef5946e9a9bef5a71217b41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  crossArrowGameObject: {fileID: 1250615690}
+  circleArrowGameObject: {fileID: 1517227402}
+  crossYouTextGameObject: {fileID: 1152875804}
+  circleYouTextGameObject: {fileID: 252435527}
 --- !u!1 &201544348
 GameObject:
   m_ObjectHideFlags: 0

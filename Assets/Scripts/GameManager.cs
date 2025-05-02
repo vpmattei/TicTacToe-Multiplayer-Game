@@ -16,6 +16,9 @@ public class GameManager : NetworkBehaviour
         public PlayerType playerType;
     }
 
+    public event EventHandler OnGameStarted;
+    public event EventHandler OnCurrentPlayablePlayerTypeChanged;
+
     public enum PlayerType
     {
         None,
@@ -24,8 +27,7 @@ public class GameManager : NetworkBehaviour
     }
 
     public PlayerType LocalPlayerType { get; private set; }
-    private PlayerType currentPlayablePlayerType;
-
+    public NetworkVariable<PlayerType> currentPlayablePlayerType = new NetworkVariable<PlayerType>();
     private void Awake()
     {
         if (Instance != null)
@@ -49,8 +51,23 @@ public class GameManager : NetworkBehaviour
 
         if (IsServer)
         {
-            currentPlayablePlayerType = PlayerType.Cross;
+            NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
         }
+    }
+
+    private void NetworkManager_OnClientConnectedCallback(ulong obj)
+    {
+        if (NetworkManager.Singleton.ConnectedClientsList.Count == 2)
+        {
+            currentPlayablePlayerType.Value = PlayerType.Cross;
+            TriggerOnGameStartedRpc();
+        }
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerOnGameStartedRpc()
+    {
+        OnGameStarted?.Invoke(this, EventArgs.Empty);
     }
 
     [Rpc(SendTo.Server)]
@@ -58,7 +75,7 @@ public class GameManager : NetworkBehaviour
     {
         Debug.Log("Clicked on the grid: " + x + ", " + y);
 
-        if (playerType != currentPlayablePlayerType) return;
+        if (playerType != currentPlayablePlayerType.Value) return;
 
         OnClickedOnGridPosition.Invoke(this, new OnClickedOnGridPositionEventArgs
         {
@@ -68,6 +85,19 @@ public class GameManager : NetworkBehaviour
         });
 
         // Switch Current Playable Player Type
-        currentPlayablePlayerType = currentPlayablePlayerType == PlayerType.Cross ? PlayerType.Circle : PlayerType.Cross;
+        currentPlayablePlayerType.Value = currentPlayablePlayerType.Value == PlayerType.Cross ? PlayerType.Circle : PlayerType.Cross;
+
+        TriggerOnCurrentPlayablePlayerTypeChangedRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerOnCurrentPlayablePlayerTypeChangedRpc()
+    {
+        OnCurrentPlayablePlayerTypeChanged.Invoke(this, EventArgs.Empty);
+    }
+
+    public PlayerType GetCurrentPlayablePlayerType()
+    {
+        return currentPlayablePlayerType.Value;
     }
 }
