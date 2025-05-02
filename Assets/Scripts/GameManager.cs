@@ -103,53 +103,53 @@ public class GameManager : NetworkBehaviour
         TestWinner();
     }
 
+    private bool TestWinnerLine(PlayerType aPlayerType, PlayerType bPlayerType, PlayerType cPlayerType)
+    {
+        bool isWinner = 
+        aPlayerType != PlayerType.None &&
+        aPlayerType == bPlayerType && 
+        bPlayerType == cPlayerType;
+
+        if (isWinner) currentPlayablePlayerType.Value = PlayerType.None;
+        
+        return isWinner;
+    }
     private void TestWinner()
     {
-        if (playerTypeArray[0, 0] != PlayerType.None &&
-            playerTypeArray[0, 0] == playerTypeArray[1, 0] &&
-            playerTypeArray[1, 0] == playerTypeArray[2, 0])
+        // Horizontal Wins
+        if (TestWinnerLine(playerTypeArray[0, 0], playerTypeArray[1, 0], playerTypeArray[2, 0]))
         {
             Debug.Log(playerTypeArray[0, 0].ToString() + " wins!");
         }
-        if (playerTypeArray[0, 1] != PlayerType.None &&
-            playerTypeArray[1, 1] == playerTypeArray[0, 1] &&
-            playerTypeArray[2, 1] == playerTypeArray[1, 1])
+        if (TestWinnerLine(playerTypeArray[0, 1], playerTypeArray[1, 1], playerTypeArray[2, 1]))
         {
             Debug.Log(playerTypeArray[0, 1].ToString() + " wins!");
         }
-        if (playerTypeArray[0, 2] != PlayerType.None &&
-            playerTypeArray[1, 2] == playerTypeArray[0, 2] &&
-            playerTypeArray[2, 2] == playerTypeArray[1, 2])
+        if (TestWinnerLine(playerTypeArray[0, 2], playerTypeArray[1, 2], playerTypeArray[2, 2]))
         {
             Debug.Log(playerTypeArray[0, 2].ToString() + " wins!");
         }
-        if (playerTypeArray[0, 0] != PlayerType.None &&
-            playerTypeArray[0, 1] == playerTypeArray[0, 0] &&
-            playerTypeArray[0, 2] == playerTypeArray[0, 1])
+
+        // Vertical Wins
+        if (TestWinnerLine(playerTypeArray[0, 0], playerTypeArray[0, 1], playerTypeArray[0, 2]))
         {
             Debug.Log(playerTypeArray[0, 0].ToString() + " wins!");
         }
-        if (playerTypeArray[1, 0] != PlayerType.None &&
-            playerTypeArray[1, 1] == playerTypeArray[1, 0] &&
-            playerTypeArray[1, 2] == playerTypeArray[1, 1])
+        if (TestWinnerLine(playerTypeArray[1, 0], playerTypeArray[1, 1], playerTypeArray[1, 2]))
         {
             Debug.Log(playerTypeArray[1, 0].ToString() + " wins!");
         }
-        if (playerTypeArray[2, 0] != PlayerType.None &&
-            playerTypeArray[2, 1] == playerTypeArray[2, 0] &&
-            playerTypeArray[2, 2] == playerTypeArray[2, 1])
+        if (TestWinnerLine(playerTypeArray[2, 0], playerTypeArray[2, 1], playerTypeArray[2, 2]))
         {
             Debug.Log(playerTypeArray[2, 0].ToString() + " wins!");
         }
-        if (playerTypeArray[0, 0] != PlayerType.None &&
-            playerTypeArray[1, 1] == playerTypeArray[0, 0] &&
-            playerTypeArray[2, 2] == playerTypeArray[1, 1])
+
+        // Diagonal Wins
+        if (TestWinnerLine(playerTypeArray[0, 0], playerTypeArray[1, 1], playerTypeArray[2, 2]))
         {
             Debug.Log(playerTypeArray[0, 0].ToString() + " wins!");
         }
-        if (playerTypeArray[0, 2] != PlayerType.None &&
-            playerTypeArray[1, 1] == playerTypeArray[0, 2] &&
-            playerTypeArray[2, 0] == playerTypeArray[1, 1])
+        if (TestWinnerLine(playerTypeArray[0, 2], playerTypeArray[1, 1], playerTypeArray[2, 0]))
         {
             Debug.Log(playerTypeArray[0, 2].ToString() + " wins!");
         }

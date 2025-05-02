@@ -50,10 +50,15 @@ public class PlayerUI : MonoBehaviour
             crossArrowGameObject.SetActive(true);
             circleArrowGameObject.SetActive(false);
         }
-        else
+        else if (GameManager.Instance.GetCurrentPlayablePlayerType() == GameManager.PlayerType.Circle)
         {
             crossArrowGameObject.SetActive(false);
             circleArrowGameObject.SetActive(true);
+        }
+        else
+        {
+            crossArrowGameObject.SetActive(false);
+            circleArrowGameObject.SetActive(false);
         }
     }
 }
