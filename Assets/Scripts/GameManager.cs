@@ -18,6 +18,10 @@ public class GameManager : NetworkBehaviour
 
     public event EventHandler OnGameStarted;
     public event EventHandler OnCurrentPlayablePlayerTypeChanged;
+    public event EventHandler<OnGameWinEventArgs> OnGameWin;
+    public class OnGameWinEventArgs : EventArgs {
+        public Vector2Int centerGridPosition;
+    };
 
     public enum PlayerType
     {
@@ -105,13 +109,17 @@ public class GameManager : NetworkBehaviour
 
     private bool TestWinnerLine(PlayerType aPlayerType, PlayerType bPlayerType, PlayerType cPlayerType)
     {
-        bool isWinner = 
+        bool isWinner =
         aPlayerType != PlayerType.None &&
-        aPlayerType == bPlayerType && 
+        aPlayerType == bPlayerType &&
         bPlayerType == cPlayerType;
 
-        if (isWinner) currentPlayablePlayerType.Value = PlayerType.None;
-        
+        if (isWinner)
+        {
+            currentPlayablePlayerType.Value = PlayerType.None;
+            //OnGameWin.Invoke(this, EventArgs.Empty);
+        }
+
         return isWinner;
     }
     private void TestWinner()

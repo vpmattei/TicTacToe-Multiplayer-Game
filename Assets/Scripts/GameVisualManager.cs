@@ -8,10 +8,14 @@ public class GameVisualManager : NetworkBehaviour
 
     [SerializeField] private Transform crossPrefab;
     [SerializeField] private Transform circlePrefab;
+    [SerializeField] private Transform lineCompletePrefab;
+
 
     void Start()
     {
         GameManager.Instance.OnClickedOnGridPosition += GameManager_OnClickedOnGridPosition;
+        GameManager.Instance.OnGameWin += GameManager_OnGameEnded;
+
     }
 
     private void GameManager_OnClickedOnGridPosition(object sender, GameManager.OnClickedOnGridPositionEventArgs e)
@@ -47,5 +51,15 @@ public class GameVisualManager : NetworkBehaviour
     private Vector2 GetGridWorldPosition(int x, int y)
     {
         return new Vector2(-GRID_SIZE + x * GRID_SIZE, -GRID_SIZE + y * GRID_SIZE);
+    }
+
+    private void GameManager_OnGameEnded(object sender, EventArgs e)
+    {
+        SpawnWinningLine();
+    }
+
+    private void SpawnWinningLine()
+    {
+        //lineCompletePrefab.SetActive(true);
     }
 }

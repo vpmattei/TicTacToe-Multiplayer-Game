@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,17 +10,20 @@ public class NetworkManagerUI : MonoBehaviour
 
     void Awake()
     {
-        startHostButton.onClick.AddListener(() => {
+        startHostButton.onClick.AddListener(() =>
+        {
             NetworkManager.Singleton.StartHost();
             HideUI();
         });
-        startClientButton.onClick.AddListener(() => {
+        startClientButton.onClick.AddListener(() =>
+        {
             NetworkManager.Singleton.StartClient();
             HideUI();
         });
     }
 
-    private void HideUI(){
+    private void HideUI()
+    {
         gameObject.SetActive(false);
     }
 }
