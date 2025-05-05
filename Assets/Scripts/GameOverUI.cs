@@ -14,7 +14,7 @@ public class GameOverUI : MonoBehaviour
     {
         rematchButton.onClick.AddListener(() =>
         {
-            //GameManager.Instance.Rematch();
+            GameManager.Instance.RematchRpc();
         });
     }
 
@@ -23,6 +23,12 @@ public class GameOverUI : MonoBehaviour
         Hide();
 
         GameManager.Instance.OnGameWin += GameManager_OnGameWin;
+        GameManager.Instance.OnRematch += GameManager_OnRematch;
+    }
+
+    private void GameManager_OnRematch(object sender, EventArgs e)
+    {
+        Hide();
     }
 
     private void GameManager_OnGameWin(object sender, GameManager.OnGameWinEventArgs e)

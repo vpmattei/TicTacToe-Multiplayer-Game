@@ -25,6 +25,7 @@ public class GameManager : NetworkBehaviour
         public Line line;
         public PlayerType winPlayerType;
     };
+    public event EventHandler OnRematch;
 
     public enum PlayerType
     {
@@ -52,6 +53,7 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<PlayerType> currentPlayablePlayerType = new NetworkVariable<PlayerType>();
     private PlayerType[,] playerTypeArray;
     private List<Line> lineList;
+    private PlayerType winnerPlayerType;
 
     private void Awake()
     {
@@ -111,6 +113,8 @@ public class GameManager : NetworkBehaviour
                 lineOrientation = Orientation.DiagonalB
             },
         };
+
+        winnerPlayerType = PlayerType.None;
     }
 
     public override void OnNetworkSpawn()
@@ -201,7 +205,8 @@ public class GameManager : NetworkBehaviour
             if (TestWinnerLine(line))
             {
                 currentPlayablePlayerType.Value = PlayerType.None;
-                TriggerOnGameWinRpc(i, playerTypeArray[line.centerGridPosition.x, line.centerGridPosition.y]);
+                winnerPlayerType = playerTypeArray[line.centerGridPosition.x, line.centerGridPosition.y];
+                TriggerOnGameWinRpc(i, winnerPlayerType);
                 break;
             }
         }
@@ -216,6 +221,34 @@ public class GameManager : NetworkBehaviour
             line = line,
             winPlayerType = winPlayerType
         });
+    }
+
+    [Rpc(SendTo.Server)]
+    public void RematchRpc()
+    {
+        for (int x = 0; x < playerTypeArray.GetLength(0); x++)
+        {
+            for (int y = 0; y < playerTypeArray.GetLength(0); y++)
+            {
+                playerTypeArray[x, y] = PlayerType.None;
+            }
+        }
+        // Next starting player is the loser of this round
+        currentPlayablePlayerType.Value = winnerPlayerType == PlayerType.Cross ? PlayerType.Circle : PlayerType.Cross;
+        winnerPlayerType = PlayerType.None;
+
+        TriggerOnRematchRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void TriggerOnRematchRpc()
+    {
+        OnRematch?.Invoke(this, EventArgs.Empty);
+    }
+
+    public PlayerType GetWinnerPlayerType()
+    {
+        return winnerPlayerType;
     }
 
     public PlayerType GetLocalPlayerType()
