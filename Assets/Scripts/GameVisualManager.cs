@@ -14,7 +14,7 @@ public class GameVisualManager : NetworkBehaviour
     void Start()
     {
         GameManager.Instance.OnClickedOnGridPosition += GameManager_OnClickedOnGridPosition;
-        GameManager.Instance.OnGameWin += GameManager_OnGameEnded;
+        GameManager.Instance.OnGameWin += GameManager_OnGameWin;
 
     }
 
@@ -53,13 +53,22 @@ public class GameVisualManager : NetworkBehaviour
         return new Vector2(-GRID_SIZE + x * GRID_SIZE, -GRID_SIZE + y * GRID_SIZE);
     }
 
-    private void GameManager_OnGameEnded(object sender, EventArgs e)
+    private void GameManager_OnGameWin(object sender, GameManager.OnGameWinEventArgs e)
     {
-        SpawnWinningLine();
-    }
+        float eulerZ = 0f;
+        switch (e.line.lineOrientation)
+        {
+            default:
+            case GameManager.Orientation.Horizontal: eulerZ = 0f; break;
+            case GameManager.Orientation.Vertical: eulerZ = 90f; break;
+            case GameManager.Orientation.DiagonalA: eulerZ = 45f; break;
+            case GameManager.Orientation.DiagonalB: eulerZ = -45f; break;
+        }
+        Transform lineCompleteTransform =
+            Instantiate(lineCompletePrefab,
+            GetGridWorldPosition(e.line.centerGridPosition.x, e.line.centerGridPosition.y),
+            Quaternion.Euler(0, 0, eulerZ));
+        lineCompleteTransform.GetComponent<NetworkObject>().Spawn(true);
 
-    private void SpawnWinningLine()
-    {
-        //lineCompletePrefab.SetActive(true);
     }
 }
