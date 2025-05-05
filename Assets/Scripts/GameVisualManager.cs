@@ -55,6 +55,11 @@ public class GameVisualManager : NetworkBehaviour
 
     private void GameManager_OnGameWin(object sender, GameManager.OnGameWinEventArgs e)
     {
+        if (!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+
         float eulerZ = 0f;
         switch (e.line.lineOrientation)
         {
@@ -69,6 +74,5 @@ public class GameVisualManager : NetworkBehaviour
             GetGridWorldPosition(e.line.centerGridPosition.x, e.line.centerGridPosition.y),
             Quaternion.Euler(0, 0, eulerZ));
         lineCompleteTransform.GetComponent<NetworkObject>().Spawn(true);
-
     }
 }

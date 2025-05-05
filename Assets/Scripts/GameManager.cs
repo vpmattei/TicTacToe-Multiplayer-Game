@@ -23,6 +23,7 @@ public class GameManager : NetworkBehaviour
     public class OnGameWinEventArgs : EventArgs
     {
         public Line line;
+        public PlayerType winPlayerType;
     };
 
     public enum PlayerType
@@ -47,7 +48,7 @@ public class GameManager : NetworkBehaviour
         public Orientation lineOrientation;
     }
 
-    public PlayerType LocalPlayerType { get; private set; }
+    private PlayerType localPlayerType;
     public NetworkVariable<PlayerType> currentPlayablePlayerType = new NetworkVariable<PlayerType>();
     private PlayerType[,] playerTypeArray;
     private List<Line> lineList;
@@ -117,11 +118,11 @@ public class GameManager : NetworkBehaviour
         ulong localClientId = NetworkManager.Singleton.LocalClientId;
         if (localClientId == 0)
         {
-            LocalPlayerType = PlayerType.Cross;
+            localPlayerType = PlayerType.Cross;
         }
         else
         {
-            LocalPlayerType = PlayerType.Circle;
+            localPlayerType = PlayerType.Circle;
         }
 
         if (IsServer)
@@ -194,20 +195,32 @@ public class GameManager : NetworkBehaviour
 
     private void TestWinner()
     {
-        foreach (Line line in lineList)
+        for (int i = 0; i < lineList.Count; i++)
         {
+            Line line = lineList[i];
             if (TestWinnerLine(line))
             {
-                Debug.Log(playerTypeArray[0, 0].ToString() + " wins!");
-                OnGameWin.Invoke(this, new OnGameWinEventArgs
-                {
-                    line = line
-                });
                 currentPlayablePlayerType.Value = PlayerType.None;
+                TriggerOnGameWinRpc(i, playerTypeArray[line.centerGridPosition.x, line.centerGridPosition.y]);
                 break;
             }
         }
+    }
 
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerOnGameWinRpc(int lineIndex, PlayerType winPlayerType)
+    {
+        Line line = lineList[lineIndex];
+        OnGameWin.Invoke(this, new OnGameWinEventArgs
+        {
+            line = line,
+            winPlayerType = winPlayerType
+        });
+    }
+
+    public PlayerType GetLocalPlayerType()
+    {
+        return localPlayerType;
     }
 
     public PlayerType GetCurrentPlayablePlayerType()

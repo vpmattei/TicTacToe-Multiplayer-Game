@@ -27,7 +27,7 @@ public class PlayerUI : MonoBehaviour
 
     private void GameManager_OnGameStarted(object sender, EventArgs e)
     {
-        if (GameManager.Instance.LocalPlayerType == GameManager.PlayerType.Cross)
+        if (GameManager.Instance.GetLocalPlayerType() == GameManager.PlayerType.Cross)
         {
             crossYouTextGameObject.SetActive(true);
         }
