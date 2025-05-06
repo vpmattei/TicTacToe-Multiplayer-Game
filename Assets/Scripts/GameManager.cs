@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ public class GameManager : NetworkBehaviour
         public PlayerType winPlayerType;
     };
     public event EventHandler OnRematch;
+    public event EventHandler OnGameTie;
 
     public enum PlayerType
     {
@@ -177,6 +179,53 @@ public class GameManager : NetworkBehaviour
         currentPlayablePlayerType.Value = currentPlayablePlayerType.Value == PlayerType.Cross ? PlayerType.Circle : PlayerType.Cross;
 
         TestWinner();
+
+        TestTie();
+    }
+
+    private void TestTie()
+    {
+        if (!AreAllGridsFilled()) return; // If all the grids are not filled, we return as the game is still going
+
+
+        for (int i = 0; i < lineList.Count; i++)
+        {
+            Line line = lineList[i];
+            if (TestWinnerLine(line))
+            {
+                return; // If we find a winner we return as this is not a tie
+            }
+        }
+
+        // All the grids are filled and we have not found a winner, so it is a tie
+        TriggerOnGameTieRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerOnGameTieRpc()
+    {
+        winnerPlayerType = PlayerType.None;
+        OnGameTie.Invoke(this, EventArgs.Empty);
+    }
+
+    private bool AreAllGridsFilled()
+    {
+        bool areAllGridsFiled = true;
+        for (int x = 0; x < playerTypeArray.GetLength(0); x++)
+        {
+            for (int y = 0; y < playerTypeArray.GetLength(0); y++)
+            {
+                PlayerType playerType = playerTypeArray[x, y];
+
+                // If we find an empty grid, i.e not placed with a Cross or Circle, then that means the game is not over yet
+                if (playerType == PlayerType.None)
+                {
+                    areAllGridsFiled = false;
+                    break;
+                }
+            }
+        }
+        return areAllGridsFiled;
     }
 
     private bool TestWinnerLine(Line line)
@@ -233,8 +282,18 @@ public class GameManager : NetworkBehaviour
                 playerTypeArray[x, y] = PlayerType.None;
             }
         }
-        // Next starting player is the loser of this round
-        currentPlayablePlayerType.Value = winnerPlayerType == PlayerType.Cross ? PlayerType.Circle : PlayerType.Cross;
+
+        // Next starting player is the loser of this round, if it is a tie, then it is a random player
+        if (winnerPlayerType == PlayerType.Cross) currentPlayablePlayerType.Value = PlayerType.Circle;
+        else if (winnerPlayerType == PlayerType.Circle) currentPlayablePlayerType.Value = PlayerType.Cross;
+        else if (winnerPlayerType == PlayerType.None)
+        {
+            int randomIntValue = UnityEngine.Random.Range(0, 2);
+            
+            if (randomIntValue == 0) currentPlayablePlayerType.Value = PlayerType.Circle;
+            else currentPlayablePlayerType.Value = PlayerType.Cross;
+        }
+
         winnerPlayerType = PlayerType.None;
 
         TriggerOnRematchRpc();

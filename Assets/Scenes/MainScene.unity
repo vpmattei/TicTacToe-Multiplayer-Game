@@ -3484,6 +3484,7 @@ MonoBehaviour:
   gameOverText: {fileID: 1246859593}
   winColor: {r: 0.2711761, g: 1, b: 0, a: 1}
   loseColor: {r: 1, g: 0.11694199, b: 0, a: 1}
+  tieColor: {r: 1, g: 1, b: 1, a: 1}
   rematchButton: {fileID: 1751871069}
 --- !u!4 &2072864701 stripped
 Transform:
