@@ -28,6 +28,7 @@ public class GameManager : NetworkBehaviour
     };
     public event EventHandler OnRematch;
     public event EventHandler OnGameTie;
+    public event EventHandler OnScoreChanged;
 
     public enum PlayerType
     {
@@ -56,6 +57,8 @@ public class GameManager : NetworkBehaviour
     private PlayerType[,] playerTypeArray;
     private List<Line> lineList;
     private PlayerType winnerPlayerType;
+    private NetworkVariable<int> playerCrossScore = new NetworkVariable<int>();
+    private NetworkVariable<int> playerCircleScore = new NetworkVariable<int>();
 
     private void Awake()
     {
@@ -139,6 +142,15 @@ public class GameManager : NetworkBehaviour
         currentPlayablePlayerType.OnValueChanged += (PlayerType oldPlayerType, PlayerType newPlayerType) =>
         {
             OnCurrentPlayablePlayerTypeChanged.Invoke(this, EventArgs.Empty);
+        };
+
+        playerCrossScore.OnValueChanged += (int prevScore, int newScore) =>
+        {
+            OnScoreChanged?.Invoke(this, EventArgs.Empty);
+        };
+        playerCircleScore.OnValueChanged += (int prevScore, int newScore) =>
+        {
+            OnScoreChanged?.Invoke(this, EventArgs.Empty);
         };
     }
 
@@ -255,6 +267,11 @@ public class GameManager : NetworkBehaviour
             {
                 currentPlayablePlayerType.Value = PlayerType.None;
                 winnerPlayerType = playerTypeArray[line.centerGridPosition.x, line.centerGridPosition.y];
+
+                // Setting the score for each player
+                if (winnerPlayerType == PlayerType.Cross) playerCrossScore.Value++;
+                else if (winnerPlayerType == PlayerType.Circle) playerCircleScore.Value++;
+
                 TriggerOnGameWinRpc(i, winnerPlayerType);
                 break;
             }
@@ -289,7 +306,7 @@ public class GameManager : NetworkBehaviour
         else if (winnerPlayerType == PlayerType.None)
         {
             int randomIntValue = UnityEngine.Random.Range(0, 2);
-            
+
             if (randomIntValue == 0) currentPlayablePlayerType.Value = PlayerType.Circle;
             else currentPlayablePlayerType.Value = PlayerType.Cross;
         }
@@ -318,5 +335,11 @@ public class GameManager : NetworkBehaviour
     public PlayerType GetCurrentPlayablePlayerType()
     {
         return currentPlayablePlayerType.Value;
+    }
+
+    public void GetScores(out int playerCrossScore, out int playerCircleScore)
+    {
+        playerCrossScore = this.playerCrossScore.Value;
+        playerCircleScore = this.playerCircleScore.Value;
     }
 }
