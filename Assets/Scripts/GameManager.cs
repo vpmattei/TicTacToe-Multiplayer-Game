@@ -126,6 +126,7 @@ public class GameManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         ulong localClientId = NetworkManager.Singleton.LocalClientId;
+        Debug.Log("OnNetworkSpawn: " + localClientId);
         if (localClientId == 0)
         {
             localPlayerType = PlayerType.Cross;
