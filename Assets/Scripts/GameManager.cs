@@ -29,6 +29,7 @@ public class GameManager : NetworkBehaviour
     public event EventHandler OnRematch;
     public event EventHandler OnGameTie;
     public event EventHandler OnScoreChanged;
+    public event EventHandler OnPlacedObject;
 
     public enum PlayerType
     {
@@ -179,6 +180,7 @@ public class GameManager : NetworkBehaviour
         if (playerTypeArray[x, y] != PlayerType.None) return;
 
         playerTypeArray[x, y] = playerType;
+        TriggerOnPlaceObjectRpc();
 
         OnClickedOnGridPosition.Invoke(this, new OnClickedOnGridPositionEventArgs
         {
@@ -193,6 +195,12 @@ public class GameManager : NetworkBehaviour
         TestWinner();
 
         TestTie();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void TriggerOnPlaceObjectRpc()
+    {
+        OnPlacedObject?.Invoke(this, EventArgs.Empty);
     }
 
     private void TestTie()
