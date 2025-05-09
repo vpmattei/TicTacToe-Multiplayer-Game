@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
+    [SerializeField] private Image gameOverImage;
     [SerializeField] private TextMeshProUGUI gameOverText;
     [SerializeField] private Color winColor;
     [SerializeField] private Color loseColor;
@@ -35,9 +36,9 @@ public class GameOverUI : MonoBehaviour
 
     private void GameManager_OnGameTie(object sender, EventArgs e)
     {
+        gameOverImage.color = tieColor;
         gameOverText.SetText("It's a Tie!");
-        gameOverText.color = tieColor;
-        
+
         Show();
     }
 
@@ -45,13 +46,13 @@ public class GameOverUI : MonoBehaviour
     {
         if (e.winPlayerType == GameManager.Instance.GetLocalPlayerType())
         {
+            gameOverImage.color = winColor;
             gameOverText.SetText("You Win!");
-            gameOverText.color = winColor;
         }
         else
         {
+            gameOverImage.color = loseColor;
             gameOverText.SetText("You Lose!");
-            gameOverText.color = loseColor;
         }
         Show();
     }
