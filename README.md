@@ -39,7 +39,10 @@ This project is a fully functional **multiplayer Tic Tac Toe game** built with *
 ![Joined Lobby](./Assets/ReadmeImages/Lobby.png)
 
 ### 🎮 Working Multiplayer Example
-![Multiplayer Main Scene](./Assets/ReadmeImages/Multiplayer_MainScene.png)  
+![Multiplayer Main Scene](./Assets/ReadmeImages/Multiplayer_MainScene.png)
+![Multiplayer Main Scene](./Assets/ReadmeImages/Won.png)
+![Multiplayer Main Scene](./Assets/ReadmeImages/Lost.png)
+![Multiplayer Main Scene](./Assets/ReadmeImages/Tie.png)
 
 ---
 
