@@ -12,6 +12,10 @@ public class GameVisualManager : NetworkBehaviour
     [SerializeField] private Transform lineCompletePrefab;
     private List<GameObject> visualGameObjectList;
 
+    [SerializeField] private Transform particleSystemPrefab;
+    [SerializeField] private Vector3 particleSystemSpawnPosition;
+    [SerializeField] private Vector3 particleSystemSpawnRotation;
+
     void Awake()
     {
         visualGameObjectList = new List<GameObject>();
@@ -22,6 +26,12 @@ public class GameVisualManager : NetworkBehaviour
         GameManager.Instance.OnClickedOnGridPosition += GameManager_OnClickedOnGridPosition;
         GameManager.Instance.OnGameWin += GameManager_OnGameWin;
         GameManager.Instance.OnRematch += GameManager_OnRematch;
+        GameManager.Instance.OnGameStarted += GameManager_OnGameStarted;
+    }
+
+    private void GameManager_OnGameStarted(object sender, EventArgs e)
+    {
+        Transform particleSystemGameObjectRef = Instantiate(particleSystemPrefab, particleSystemSpawnPosition, Quaternion.Euler(particleSystemSpawnRotation));
     }
 
     private void GameManager_OnRematch(object sender, EventArgs e)

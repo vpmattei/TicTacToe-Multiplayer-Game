@@ -74,3 +74,4 @@ MonoBehaviour:
   crossPrefab: {fileID: 6672636153402041360, guid: 6753b636606ce054d85111bf8ded7907, type: 3}
   circlePrefab: {fileID: 6672636153402041360, guid: 0576a3ced7a84374d997ae5c719d58fe, type: 3}
   lineCompletePrefab: {fileID: 4192552173527679457, guid: 6d8e34d9e7b924b759a4b4917e1ec862, type: 3}
+  particleSystemGameObjectRef: {fileID: 0}
