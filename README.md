@@ -46,3 +46,7 @@ This project is a fully functional **multiplayer Tic Tac Toe game** built with *
 ## 🧠 Learning Focus
 
 This project was built for **educational purposes** — to demonstrate how small-scale multiplayer games can be prototyped in Unity using modern networking tools, without relying on third-party plugins.
+
+I completed this project following this tutorial by Code Monkey:
+https://youtu.be/YmUnXsOp_t0?si=3RSUPIlbplx6e58Z
+
