@@ -1,4 +1,5 @@
 # 🕹️ Multiplayer Tic Tac Toe (Unity + Netcode)
+![TicTacToe Game UI](./Assets/ReadmeImages/TicTacToe_MainScene.png)
 
 This project is a fully functional **multiplayer Tic Tac Toe game** built with **Unity** using **Netcode for GameObjects**, **Unity Lobby**, and **Relay services**. It demonstrates how to implement real-time multiplayer features like matchmaking, turn-based logic, synced scores, sound effects, and rematches — all using Unity’s official networking stack.
 
@@ -24,6 +25,21 @@ This project is a fully functional **multiplayer Tic Tac Toe game** built with *
 - **Unity Lobby & Relay Services**  
 - **C# Events & Delegates**  
 - **AudioSource, UI Toolkit, and GameManager patterns**
+
+---
+
+## 📸 Screenshots
+
+### 🔐 Player Authentication
+![Typing Name](./Assets/ReadmeImages/TypingName.png)
+
+### 📋 Creating and Joining a Lobby
+![Create Lobby](./Assets/ReadmeImages/CreatingLobby.png)  
+![Lobby List](./Assets/ReadmeImages/LobbyList.png)  
+![Joined Lobby](./Assets/ReadmeImages/Lobby.png)
+
+### 🎮 Working Multiplayer Example
+![Multiplayer Main Scene](./Assets/ReadmeImages/Multiplayer_MainScene.png)  
 
 ---
 
