@@ -141,7 +141,7 @@ public class GameManager : NetworkBehaviour
 
         currentPlayablePlayerType.OnValueChanged += (PlayerType oldPlayerType, PlayerType newPlayerType) =>
         {
-            OnCurrentPlayablePlayerTypeChanged.Invoke(this, EventArgs.Empty);
+            OnCurrentPlayablePlayerTypeChanged?.Invoke(this, EventArgs.Empty);
         };
 
         playerCrossScore.OnValueChanged += (int prevScore, int newScore) =>
@@ -206,7 +206,6 @@ public class GameManager : NetworkBehaviour
     {
         if (!AreAllGridsFilled()) return; // If all the grids are not filled, we return as the game is still going
 
-
         for (int i = 0; i < lineList.Count; i++)
         {
             Line line = lineList[i];
@@ -224,7 +223,8 @@ public class GameManager : NetworkBehaviour
     private void TriggerOnGameTieRpc()
     {
         winnerPlayerType = PlayerType.None;
-        OnGameTie.Invoke(this, EventArgs.Empty);
+        if (OnGameTie == null) Debug.LogError("Null reference for OnGameTie!");
+        OnGameTie?.Invoke(this, EventArgs.Empty);
     }
 
     private bool AreAllGridsFilled()
